@@ -20,31 +20,34 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UserInfoProvider>(
       create: (context) => UserInfoProvider(),
-      child: MaterialApp.router(
-        theme: dreavyTheme,
-        debugShowCheckedModeBanner: false,
-        routerConfig: GoRouter(
-          errorBuilder: (_, GoRouterState state) => NotFoundPage(state: state),
-          initialLocation: '/login',
-          redirect: (context, state) async {
-            if (state.location.isEmpty) return '/home';
-            // if (!await LoginService.of(context).isLoggedIn) return '/login';
-            return null;
-          },
-          routes: <GoRoute>[
-            GoRoute(
-                path: '/login',
-                builder: (_, GoRouterState state) => SignInPage(state: state)),
-            GoRoute(
-                path: '/home',
-                builder: (_, GoRouterState state) => HomePage(state: state)),
-            GoRoute(
-                path: '/profile',
-                builder: (_, GoRouterState state) => ProfilePage(state: state)),
-            GoRoute(
-                path: '/favorites',
-                builder: (_, GoRouterState state) => FavoritePage(state: state)),
-          ],
+      child: Consumer<UserInfoProvider>(
+        builder: (_, userInfo, __) => MaterialApp.router(
+          theme: dreavyTheme,
+          debugShowCheckedModeBanner: false,
+          routerConfig: GoRouter(
+            errorBuilder: (_, GoRouterState s) => NotFoundPage(state: s),
+            redirect: (context, state) async {
+              if (!userInfo.isLogged) return '/login';
+              return null;
+            },
+            routes: <GoRoute>[
+              GoRoute(
+                  path: '/',
+                  builder: (_, GoRouterState s) => HomePage(state: s)),
+              GoRoute(
+                  path: '/home',
+                  builder: (_, GoRouterState s) => HomePage(state: s)),
+              GoRoute(
+                  path: '/login',
+                  builder: (_, GoRouterState s) => SignInPage(state: s)),
+              GoRoute(
+                  path: '/profile',
+                  builder: (_, GoRouterState s) => ProfilePage(state: s)),
+              GoRoute(
+                  path: '/favorites',
+                  builder: (_, GoRouterState s) => FavoritePage(state: s)),
+            ],
+          ),
         ),
       ),
     );

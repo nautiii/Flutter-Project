@@ -1,24 +1,27 @@
 import 'package:dreavy/providers/user_info_provider.dart';
 import 'package:dreavy/ui/shared/dreavy_button.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:dreavy/ui/shared/dreavy_formfield.dart';
 import 'package:dreavy/ui/shared/glass_container.dart';
+import 'package:dreavy/ui/login/sign_up_page.dart';
+import 'package:dreavy/ui/login/validators.dart';
+
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
   final GoRouterState state;
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final pwdController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _pwdController = TextEditingController();
 
   SignInPage({Key? key, required this.state}) : super(key: key);
 
   void submit(BuildContext context) {
-    context.read<UserInfoProvider>().addUser();
-
     if (_formKey.currentState!.validate()) {
-      GoRouter.of(context).go('/home');
+      context
+          .read<UserInfoProvider>()
+          .getUser(_emailController.text, _pwdController.text);
     }
   }
 
@@ -52,28 +55,14 @@ class SignInPage extends StatelessWidget {
                   DreavyFormField(
                       label: 'Email',
                       icon: Icons.person,
-                      controller: emailController,
-                      validator: (String? value) {
-                        return (value == null || value.isEmpty)
-                            ? 'This field is required, please enter a valid email'
-                            : (!RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-                                    .hasMatch(value))
-                                ? 'Invalid email, please enter a valid one'
-                                : null;
-                      }),
+                      controller: _emailController,
+                      validator: Validators.validateEmail),
                   DreavyFormField(
                       label: 'Password',
                       icon: Icons.lock,
                       hide: true,
-                      controller: pwdController,
-                      validator: (String? value) {
-                        return (value == null || value.isEmpty)
-                            ? 'This field is required, please enter a valid password'
-                            : (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$')
-                                    .hasMatch(value))
-                                ? 'Invalid password, check if there is at least 1 uppercase/lowercase letter, 1 number and 1 special character'
-                                : null;
-                      }),
+                      controller: _pwdController,
+                      validator: Validators.validatePassword),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0, right: 8.0),
                     child: SizedBox(
@@ -95,16 +84,24 @@ class SignInPage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text('New to our community ? ',
+                      children: [
+                        const Text('New to our community ? ',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 16.0)),
-                        Text(' Join Now',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white))
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SignUpPage(state: state),
+                            ),
+                          ),
+                          child: const Text(' Join Now',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                        )
                       ],
                     ),
                   ),
