@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>497174394255-8hs722su9mkmkk7oeo2a3l8rgh8rmggl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.497174394255-8hs722su9mkmkk7oeo2a3l8rgh8rmggl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBplJPhY4zwHsyjlOl2X_pAj5NpnBElydY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>497174394255</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.nautiii.dreavy</string>
+	<key>PROJECT_ID</key>
+	<string>dreavy-8bf62</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dreavy-8bf62.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:497174394255:ios:fcf90a1e032d5a93da47fa</string>
+</dict>
+</plist>

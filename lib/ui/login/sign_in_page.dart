@@ -1,8 +1,10 @@
+import 'package:dreavy/providers/user_info_provider.dart';
 import 'package:dreavy/ui/shared/dreavy_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dreavy/ui/shared/dreavy_formfield.dart';
 import 'package:dreavy/ui/shared/glass_container.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
   final GoRouterState state;
@@ -13,6 +15,8 @@ class SignInPage extends StatelessWidget {
   SignInPage({Key? key, required this.state}) : super(key: key);
 
   void submit(BuildContext context) {
+    context.read<UserInfoProvider>().addUser();
+
     if (_formKey.currentState!.validate()) {
       GoRouter.of(context).go('/home');
     }
