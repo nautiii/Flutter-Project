@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DreavyFormField extends StatelessWidget {
+class DreavyFormField extends StatefulWidget {
   final String label;
   final IconData icon;
   final String? Function(String?)? validator;
@@ -17,27 +17,45 @@ class DreavyFormField extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<DreavyFormField> createState() => _DreavyFormFieldState();
+}
+
+class _DreavyFormFieldState extends State<DreavyFormField> {
+  late bool _isTextHidden = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isTextHidden = widget.hide;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
-        controller: controller,
+        controller: widget.controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        obscureText: hide,
+        obscureText: _isTextHidden,
         enableSuggestions: true,
         cursorColor: Colors.black87,
         style: const TextStyle(color: Color.fromRGBO(222, 222, 222, 1.0)),
         decoration: InputDecoration(
           icon: Icon(
-            icon,
+            widget.icon,
             color: Colors.black87,
             size: 28.0,
           ),
-          suffixIcon: hide
-              ? const Icon(Icons.remove_red_eye,
-                  color: Colors.black87, size: 28.0)
+          suffixIcon: widget.hide
+              ? IconButton(
+                  icon: const Icon(Icons.remove_red_eye),
+                  color: Colors.black87,
+                  iconSize: 28.0,
+                  onPressed: () => setState(() {
+                        _isTextHidden = !_isTextHidden;
+                      }))
               : null,
-          labelText: label,
+          labelText: widget.label,
           labelStyle: const TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.bold,
@@ -48,10 +66,10 @@ class DreavyFormField extends StatelessWidget {
             borderSide: BorderSide(color: Colors.black87),
           ),
           enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white30),
+            borderSide: BorderSide(color: Color.fromRGBO(222, 222, 222, 1.0)),
           ),
         ),
-        validator: validator,
+        validator: widget.validator,
       ),
     );
   }
