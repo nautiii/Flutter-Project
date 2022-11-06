@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const App());
 }
 
@@ -25,7 +26,7 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routerConfig: GoRouter(
           errorBuilder: (_, GoRouterState state) => NotFoundPage(state: state),
-          initialLocation: '/login',
+          initialLocation: '/home',
           redirect: (context, state) async {
             if (state.location.isEmpty) return '/home';
             // if (!await LoginService.of(context).isLoggedIn) return '/login';
@@ -43,7 +44,8 @@ class App extends StatelessWidget {
                 builder: (_, GoRouterState state) => ProfilePage(state: state)),
             GoRoute(
                 path: '/favorites',
-                builder: (_, GoRouterState state) => FavoritePage(state: state)),
+                builder: (_, GoRouterState state) =>
+                    FavoritePage(state: state)),
           ],
         ),
       ),
