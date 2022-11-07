@@ -1,16 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dreavy/models/picture_model.dart';
+import 'package:dreavy/providers/user_info_provider.dart';
+import 'package:dreavy/ui/shared/glass_floating_button.dart';
+import 'package:flutter/material.dart';
 
 class CameraProvider extends ChangeNotifier {
+  CameraProvider() : super() {
+    setupCamera();
+    getAllPhotos();
+  }
+
   late List<CameraDescription> _cameras;
   late CameraController _controller;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool _isInitialized = false;
+  List<PictureModel>? _photos;
 
-  Future setupCamera() async {
+  Future<void> setupCamera() async {
     try {
       _cameras = await availableCameras();
       print(_cameras);
@@ -26,15 +37,57 @@ class CameraProvider extends ChangeNotifier {
     }
   }
 
-  Future storePhoto(XFile photo) async {
-    Uint8List bytes = await photo.readAsBytes();
-    String base64 = base64Encode(bytes);
+  Future<void> storePhoto(String id, XFile photo) async {
+    final Uint8List bytes = await photo.readAsBytes();
+    final String encoded = base64Encode(bytes);
+
+    try {
+      await _db.collection('pictures').add(<String, dynamic>{
+        'user_id': id,
+        'base64': encoded,
+      });
+      print(base64);
+      await getAllPhotos();
+    } on Exception catch (_, e) {
+      print(e);
+    }
   }
 
-  CameraProvider() : super() {
-    setupCamera();
+  Future<void> getAllPhotos() async {
+    final QuerySnapshot<Map<String, dynamic>> pics =
+        await _db.collection('pictures').get();
+
+    _photos = pics.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> pic) =>
+              PictureModel.fromQuery(pic.data()),
+        )
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> openCameraView(
+    BuildContext context,
+    UserInfoProvider info,
+  ) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => Scaffold(
+          body: CameraPreview(controller),
+          floatingActionButton: GlassFloatingButton(
+            size: 64.0,
+            icon: Icons.camera,
+            onPress: () => controller.takePicture().then((XFile photo) {
+              storePhoto(info.user!.id, photo);
+              Navigator.of(context).pop();
+            }),
+          ),
+        ),
+      ),
+    );
   }
 
   bool get isInitialized => _isInitialized;
   CameraController get controller => _controller;
+  List<PictureModel>? get photos => _photos;
 }
