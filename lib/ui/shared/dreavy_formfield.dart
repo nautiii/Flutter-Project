@@ -63,10 +63,10 @@ class _DreavyFormFieldState extends State<DreavyFormField> {
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
           focusedBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.black87),
+            borderSide: BorderSide(color: Color.fromRGBO(222, 222, 222, 1.0)),
           ),
           enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Color.fromRGBO(222, 222, 222, 1.0)),
+            borderSide: BorderSide(color: Colors.black87),
           ),
         ),
         validator: widget.validator,
