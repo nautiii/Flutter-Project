@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dreavy/firebase_options.dart';
+import 'package:dreavy/models/picture_model.dart';
 import 'package:dreavy/models/user_model.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +18,7 @@ class UserInfoProvider extends ChangeNotifier {
 
   late final FirebaseFirestore? _db;
   late UserModel? _user;
+  List<PictureModel>? _photos;
   bool _isLogged = false;
 
   String getBase64Encrypted(String data) {
@@ -51,7 +57,7 @@ class UserInfoProvider extends ChangeNotifier {
         ...data,
       });
       _isLogged = true;
-      notifyListeners();
+      await getAllPhotos();
     } on Exception catch (_, e) {
       print(e);
     }
@@ -73,12 +79,40 @@ class UserInfoProvider extends ChangeNotifier {
       print('DocumentSnapshot added with ID: ${doc!.id}');
       _user = UserModel(doc.id, email, encrypted);
       _isLogged = true;
-      notifyListeners();
+      await getAllPhotos();
     } on Exception catch (_, e) {
       print(e);
     }
   }
 
+  Future<void> getAllPhotos() async {
+    final QuerySnapshot<Map<String, dynamic>>? pics =
+        await _db?.collection('pictures').get();
+
+    _photos = pics?.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> pic) =>
+              PictureModel.fromQuery(pic.data()),
+        )
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> updateProfilePic(XFile picture) async {
+    final Uint8List bytes = await picture.readAsBytes();
+    final String encoded = base64Encode(bytes);
+
+    await _db
+        ?.collection('users')
+        .doc(_user!.id)
+        .update(<String, dynamic>{'profile_picture': encoded})
+        .then((_) {
+          notifyListeners();
+        })
+        .catchError((Object error) => print('Failed: $error'));
+  }
+
   UserModel? get user => _user;
   bool get isLogged => _isLogged;
+  List<PictureModel>? get photos => _photos;
 }

@@ -1,12 +1,18 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class GlassToolBar extends StatelessWidget implements PreferredSize {
-  const GlassToolBar({Key? key, required this.backArrowFunction})
-      : super(key: key);
+  const GlassToolBar({
+    Key? key,
+    required this.backArrowFunction,
+    required this.avatar,
+  }) : super(key: key);
 
   final void Function() backArrowFunction;
+  final String? avatar;
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +80,22 @@ class GlassToolBar extends StatelessWidget implements PreferredSize {
                       child: InkWell(
                         onTap: () {},
                         borderRadius: BorderRadius.circular(64.0),
-                        child: const Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: Icon(Icons.person),
+                        child: GestureDetector(
+                          onTap: () => GoRouter.of(context).go('/profile'),
+                          child: avatar != null && avatar!.isNotEmpty
+                              ? ClipOval(
+                                  child: SizedBox.fromSize(
+                                    size: const Size.fromRadius(16.0),
+                                    child:
+                                        avatar != null && avatar!.isNotEmpty
+                                            ? Image.memory(
+                                                base64Decode(avatar!),
+                                                fit: BoxFit.fill,
+                                              )
+                                            : const Icon(Icons.person),
+                                  ),
+                                )
+                              : const Icon(Icons.person),
                         ),
                       ),
                     ),
@@ -94,5 +113,5 @@ class GlassToolBar extends StatelessWidget implements PreferredSize {
   Widget get child => this;
 
   @override
-  Size get preferredSize => const Size.fromHeight(52.0);
+  Size get preferredSize => const Size.fromHeight(64.0);
 }
