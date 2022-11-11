@@ -108,7 +108,9 @@ class UserInfoProvider extends ChangeNotifier {
       _photos?.removeWhere((PictureModel photo) => photo.id == id);
       print('############ deletePhoto');
       notifyListeners();
-    }).catchError((Object error) => print('Failed to delete picture: $error'));
+    }).catchError((Object error) {
+      print('Failed to delete picture: $error');
+    });
   }
 
   Future<void> updateProfilePic(XFile picture) async {
@@ -121,7 +123,9 @@ class UserInfoProvider extends ChangeNotifier {
         .update(<String, dynamic>{'profile_picture': encoded}).then((_) {
       print('############ updateProfilePic');
       notifyListeners();
-    }).catchError((Object error) => print('Failed: $error'));
+    }).catchError((Object error){
+      print('Failed: $error');
+    });
   }
 
   UserModel? get user => _user;
