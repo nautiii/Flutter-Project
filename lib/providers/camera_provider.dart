@@ -4,27 +4,28 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dreavy/models/picture_model.dart';
 import 'package:dreavy/providers/user_info_provider.dart';
 import 'package:dreavy/ui/shared/glass_floating_button.dart';
 import 'package:flutter/material.dart';
 
 class CameraProvider extends ChangeNotifier {
   CameraProvider() : super() {
-    setupCamera();
-    getAllPhotos();
+    if (!_isInitialized) {
+      setupCamera();
+      print('setting up');
+    } else {
+      print('already done');
+    }
   }
 
   late List<CameraDescription> _cameras;
   late CameraController _controller;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   bool _isInitialized = false;
-  List<PictureModel>? _photos;
 
   Future<void> setupCamera() async {
     try {
       _cameras = await availableCameras();
-      print(_cameras);
       _controller = CameraController(
         _cameras.first,
         ResolutionPreset.high,
@@ -47,23 +48,9 @@ class CameraProvider extends ChangeNotifier {
         'base64': encoded,
       });
       print(base64);
-      await getAllPhotos();
     } on Exception catch (_, e) {
       print(e);
     }
-  }
-
-  Future<void> getAllPhotos() async {
-    final QuerySnapshot<Map<String, dynamic>> pics =
-        await _db.collection('pictures').get();
-
-    _photos = pics.docs
-        .map(
-          (QueryDocumentSnapshot<Map<String, dynamic>> pic) =>
-              PictureModel.fromQuery(pic.data()),
-        )
-        .toList();
-    notifyListeners();
   }
 
   Future<void> openCameraView(
@@ -79,6 +66,7 @@ class CameraProvider extends ChangeNotifier {
             icon: Icons.camera,
             onPress: () => controller.takePicture().then((XFile photo) {
               storePhoto(info.user!.id, photo);
+              info.getAllPhotos();
               Navigator.of(context).pop();
             }),
           ),
@@ -89,5 +77,4 @@ class CameraProvider extends ChangeNotifier {
 
   bool get isInitialized => _isInitialized;
   CameraController get controller => _controller;
-  List<PictureModel>? get photos => _photos;
 }

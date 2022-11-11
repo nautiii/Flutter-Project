@@ -13,8 +13,8 @@ class SignInPage extends StatelessWidget {
 
   final GoRouterState state;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _pwdController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(text: 'nautiii.games@gmail.com');
+  final TextEditingController _pwdController = TextEditingController(text: 'Aa1!bb');
 
   void submit(BuildContext context) {
     if (_formKey.currentState!.validate()) {

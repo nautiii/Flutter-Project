@@ -28,6 +28,7 @@ class App extends StatelessWidget {
             errorBuilder: (_, GoRouterState s) => NotFoundPage(state: s),
             redirect: (BuildContext context, GoRouterState state) async {
               if (!userInfo.isLogged) return '/login';
+              print('############ redirect');
               return null;
             },
             routes: <GoRoute>[
