@@ -69,23 +69,6 @@ class GlassProfileHeader extends StatelessWidget implements PreferredSize {
                       Text('$shared'),
                     ],
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text(
-                          'Liked photos',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                      Text('$liked'),
-                    ],
-                  ),
                 ],
               ),
             ],
