@@ -4,6 +4,7 @@ import 'package:dreavy/ui/pages/camera_page.dart';
 import 'package:dreavy/ui/shared/glass_floating_button.dart';
 import 'package:dreavy/ui/shared/glass_toolbar.dart';
 import 'package:dreavy/ui/shared/pictures_grid.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,16 @@ class _HomePageState extends State<HomePage> {
             ),
             body: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    kIsWeb
+                        ? 'lib/assets/background_desktop.jpg'
+                        : 'lib/assets/background2.jpg',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
               child: PicturesGrid(
                 photos: info.photos,
                 onDelete: info.user != null && info.user!.admin

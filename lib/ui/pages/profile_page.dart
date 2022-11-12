@@ -4,6 +4,7 @@ import 'package:dreavy/models/picture_model.dart';
 import 'package:dreavy/providers/user_info_provider.dart';
 import 'package:dreavy/ui/shared/glass_profile_header.dart';
 import 'package:dreavy/ui/shared/pictures_grid.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,8 +50,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 liked: ownedPictures?.length ?? 0,
                 backArrowFunction: () => GoRouter.of(context).go('/home'),
               ),
-              body: PicturesGrid(
-                photos: ownedPictures,
+              body: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      kIsWeb
+                          ? 'lib/assets/background_desktop.jpg'
+                          : 'lib/assets/background3.jpg',
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: PicturesGrid(
+                  photos: ownedPictures,
+                ),
               ),
             ),
             Hero(
@@ -68,9 +82,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     final XFile? profilePic =
                         await picker.pickImage(source: ImageSource.gallery);
                     if (profilePic == null) {
-                      print('error while picking the image');
+                      if (kDebugMode) {
+                        print('error while picking the image');
+                      }
                     } else {
-                      print(profilePic.path);
                       await userInfo.updateProfilePic(profilePic);
                     }
                   },

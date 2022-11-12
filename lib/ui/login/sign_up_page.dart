@@ -4,6 +4,7 @@ import 'package:dreavy/ui/login/validators.dart';
 import 'package:dreavy/ui/shared/dreavy_button.dart';
 import 'package:dreavy/ui/shared/dreavy_formfield.dart';
 import 'package:dreavy/ui/shared/glass_container.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -36,14 +37,18 @@ class SignUpPage extends StatelessWidget {
         alignment: Alignment.center,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/assets/background.jpg'),
+            image: AssetImage(
+              kIsWeb
+                  ? 'lib/assets/background_desktop.jpg'
+                  : 'lib/assets/background.jpg',
+            ),
             fit: BoxFit.cover,
           ),
         ),
         child: GlassContainer(
           alignment: Alignment.topCenter,
-          height: MediaQuery.of(context).size.height * 0.75,
-          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * (kIsWeb ? 0.85 : 0.75),
+          width: MediaQuery.of(context).size.width * (kIsWeb ? 0.3 : 0.8),
           child: Form(
             key: _formKey,
             child: Column(
@@ -104,6 +109,7 @@ class SignUpPage extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16.0,
+                            overflow: TextOverflow.visible,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),

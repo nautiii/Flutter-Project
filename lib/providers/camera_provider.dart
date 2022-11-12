@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class CameraProvider extends ChangeNotifier {
   CameraProvider() : super() {
     if (!_isInitialized) {
       setupCamera();
-      print('setting up');
-    } else {
-      print('already done');
     }
   }
 
@@ -32,7 +28,9 @@ class CameraProvider extends ChangeNotifier {
       _isInitialized = true;
       notifyListeners();
     } on CameraException catch (_, e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -45,9 +43,10 @@ class CameraProvider extends ChangeNotifier {
         'user_id': id,
         'base64': encoded,
       });
-      print(base64);
     } on Exception catch (_, e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +7,7 @@ import 'package:dreavy/models/picture_model.dart';
 import 'package:dreavy/models/user_model.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart' hide Key;
+import 'package:flutter/foundation.dart' hide Key;
 
 class UserInfoProvider extends ChangeNotifier {
   UserInfoProvider() : super() {
@@ -40,7 +39,6 @@ class UserInfoProvider extends ChangeNotifier {
   void logout() {
     _user = null;
     _isLogged = false;
-    print('############ logout');
     notifyListeners();
   }
 
@@ -60,7 +58,9 @@ class UserInfoProvider extends ChangeNotifier {
       _isLogged = true;
       await getAllPhotos();
     } on Exception catch (_, e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -77,12 +77,13 @@ class UserInfoProvider extends ChangeNotifier {
         'pseudo': pseudo,
       });
 
-      print('DocumentSnapshot added with ID: ${doc!.id}');
-      _user = UserModel(doc.id, email, encrypted);
+      _user = UserModel(doc!.id, email, encrypted);
       _isLogged = true;
       await getAllPhotos();
     } on Exception catch (_, e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -99,17 +100,17 @@ class UserInfoProvider extends ChangeNotifier {
           }),
         )
         .toList();
-    print('############ getAllPhotos');
     notifyListeners();
   }
 
   Future<void> deletePhoto(String id) async {
     await _db?.collection('pictures').doc(id).delete().then((_) {
       _photos?.removeWhere((PictureModel photo) => photo.id == id);
-      print('############ deletePhoto');
       notifyListeners();
     }).catchError((Object error) {
-      print('Failed to delete picture: $error');
+      if (kDebugMode) {
+        print('Failed to delete picture: $error');
+      }
     });
   }
 
@@ -121,10 +122,11 @@ class UserInfoProvider extends ChangeNotifier {
         ?.collection('users')
         .doc(_user!.id)
         .update(<String, dynamic>{'profile_picture': encoded}).then((_) {
-      print('############ updateProfilePic');
       notifyListeners();
     }).catchError((Object error){
-      print('Failed: $error');
+      if (kDebugMode) {
+        print('Failed: $error');
+      }
     });
   }
 
