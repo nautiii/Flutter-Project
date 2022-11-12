@@ -4,8 +4,6 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dreavy/providers/user_info_provider.dart';
-import 'package:dreavy/ui/shared/glass_floating_button.dart';
 import 'package:flutter/material.dart';
 
 class CameraProvider extends ChangeNotifier {
@@ -51,28 +49,6 @@ class CameraProvider extends ChangeNotifier {
     } on Exception catch (_, e) {
       print(e);
     }
-  }
-
-  Future<void> openCameraView(
-    BuildContext context,
-    UserInfoProvider info,
-  ) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => Scaffold(
-          body: CameraPreview(controller),
-          floatingActionButton: GlassFloatingButton(
-            size: 64.0,
-            icon: Icons.camera,
-            onPress: () => controller.takePicture().then((XFile photo) {
-              storePhoto(info.user!.id, photo);
-              info.getAllPhotos();
-              Navigator.of(context).pop();
-            }),
-          ),
-        ),
-      ),
-    );
   }
 
   bool get isInitialized => _isInitialized;

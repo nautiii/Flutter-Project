@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'glass_container.dart';
 
 class GlassFloatingButton extends StatelessWidget {
@@ -17,6 +18,13 @@ class GlassFloatingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      heroTag: String.fromCharCodes(
+        Iterable<int>.generate(
+          10,
+          (_) => 'abcdef123456'
+              .codeUnitAt(Random().nextInt('abcdef123456'.length)),
+        ),
+      ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       onPressed: onPress,

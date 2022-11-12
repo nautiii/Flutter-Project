@@ -1,7 +1,6 @@
 import 'package:dreavy/providers/user_info_provider.dart';
 import 'package:dreavy/theme.dart';
 import 'package:dreavy/ui/login/sign_in_page.dart';
-import 'package:dreavy/ui/pages/favorite_page.dart';
 import 'package:dreavy/ui/pages/home_page.dart';
 import 'package:dreavy/ui/pages/not_found_page.dart';
 import 'package:dreavy/ui/pages/profile_page.dart';
@@ -47,10 +46,6 @@ class App extends StatelessWidget {
               GoRoute(
                 path: '/profile',
                 builder: (_, GoRouterState s) => ProfilePage(state: s),
-              ),
-              GoRoute(
-                path: '/favorites',
-                builder: (_, GoRouterState s) => FavoritePage(state: s),
               ),
             ],
           ),

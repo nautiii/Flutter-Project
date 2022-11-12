@@ -42,14 +42,16 @@ class _PicturesGridState extends State<PicturesGrid> {
                       setState(() => _idToDelete = '');
                     },
                     height: _idToDelete == photo.id ? 0.0 : 1024.0,
-                    child: Image.memory(
-                      base64Decode(photo.base64),
-                      fit: BoxFit.contain,
+                    child: Center(
+                      child: Image.memory(
+                        base64Decode(photo.base64),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                   if (widget.onDelete != null && _idToDelete != photo.id)
                     Container(
-                      margin: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(12.0),
                       child: ClipOval(
                         child: Material(
                           color: Colors.white54,

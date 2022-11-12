@@ -1,5 +1,6 @@
 import 'package:dreavy/providers/camera_provider.dart';
 import 'package:dreavy/providers/user_info_provider.dart';
+import 'package:dreavy/ui/pages/camera_page.dart';
 import 'package:dreavy/ui/shared/glass_floating_button.dart';
 import 'package:dreavy/ui/shared/glass_toolbar.dart';
 import 'package:dreavy/ui/shared/pictures_grid.dart';
@@ -23,21 +24,21 @@ class _HomePageState extends State<HomePage> {
     return ChangeNotifierProvider<CameraProvider>(
       create: (_) => CameraProvider(),
       child: Consumer2<CameraProvider, UserInfoProvider>(
-        builder: (_, CameraProvider camera, UserInfoProvider userInfo, __) {
+        builder: (_, CameraProvider camera, UserInfoProvider info, __) {
           timeDilation = 3.0;
 
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: GlassToolBar(
-              backArrowFunction: userInfo.logout,
-              avatar: userInfo.user?.profilePicture,
+              backArrowFunction: info.logout,
+              avatar: info.user?.profilePicture,
             ),
             body: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: PicturesGrid(
-                photos: userInfo.photos,
-                onDelete: userInfo.user != null && userInfo.user!.admin
-                    ? userInfo.deletePhoto
+                photos: info.photos,
+                onDelete: info.user != null && info.user!.admin
+                    ? info.deletePhoto
                     : null,
               ),
             ),
@@ -45,7 +46,11 @@ class _HomePageState extends State<HomePage> {
                 ? GlassFloatingButton(
                     size: 64.0,
                     icon: Icons.camera_alt,
-                    onPress: () => camera.openCameraView(context, userInfo),
+                    onPress: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => CameraPage(info: info, cam: camera),
+                      ),
+                    ),
                   )
                 : null,
           );
